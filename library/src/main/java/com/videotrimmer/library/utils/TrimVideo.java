@@ -77,14 +77,16 @@ public class TrimVideo {
             return this;
         }
 
-        public void start(Activity activity) {
+        public Intent build(Activity activity) {
             validate();
-            activity.startActivityForResult(getIntent(activity), VIDEO_TRIMMER_REQ_CODE);
+            return getIntent(activity);
+            //activity.startActivityForResult(getIntent(activity), VIDEO_TRIMMER_REQ_CODE);
         }
         
-        public void start(Fragment fragment) {
+        public Intent build(Fragment fragment) {
             validate();
-            fragment.startActivityForResult(getIntent(fragment.getActivity()), VIDEO_TRIMMER_REQ_CODE);
+            return getIntent(fragment.getActivity());
+            //fragment.startActivityForResult(getIntent(fragment.getActivity()), VIDEO_TRIMMER_REQ_CODE);
         }
 
         private void validate() {
