@@ -14,7 +14,8 @@
         android:supportsRtl="true"
         android:requestLegacyExternalStorage="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.gowtham.videotrimmer_litr.MainActivity">
+        <activity android:name="com.gowtham.videotrimmer_litr.MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

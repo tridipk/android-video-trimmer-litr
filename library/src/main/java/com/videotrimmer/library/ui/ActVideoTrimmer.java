@@ -10,7 +10,6 @@ import android.media.MediaFormat;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.view.Menu;
@@ -36,16 +35,22 @@ import com.bumptech.glide.request.RequestOptions;
 import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar;
 import com.crystal.crystalrangeseekbar.widgets.CrystalSeekbar;
 import com.google.android.exoplayer2.C;
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
-import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.audio.AudioAttributes;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
-import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.ui.StyledPlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.linkedin.android.litr.MediaTransformer;
+import com.linkedin.android.litr.TransformationListener;
+import com.linkedin.android.litr.TransformationOptions;
+import com.linkedin.android.litr.analytics.TrackTransformationInfo;
+import com.linkedin.android.litr.io.MediaRange;
+import com.linkedin.android.litr.utils.CodecUtils;
 import com.videotrimmer.library.R;
 import com.videotrimmer.library.utils.CompressOption;
 import com.videotrimmer.library.utils.CustomProgressView;
@@ -54,12 +59,6 @@ import com.videotrimmer.library.utils.LogMessage;
 import com.videotrimmer.library.utils.TrimVideo;
 import com.videotrimmer.library.utils.TrimVideoOptions;
 import com.videotrimmer.library.utils.TrimmerUtils;
-import com.linkedin.android.litr.MediaTransformer;
-import com.linkedin.android.litr.TransformationListener;
-import com.linkedin.android.litr.TransformationOptions;
-import com.linkedin.android.litr.analytics.TrackTransformationInfo;
-import com.linkedin.android.litr.io.MediaRange;
-import com.linkedin.android.litr.utils.CodecUtils;
 
 import java.io.File;
 import java.util.Calendar;
@@ -71,11 +70,11 @@ import java.util.concurrent.TimeUnit;
 
 public class ActVideoTrimmer extends AppCompatActivity {
 
-    private PlayerView playerView;
+    private StyledPlayerView playerView;
 
     private static final int PER_REQ_CODE = 115;
 
-    private SimpleExoPlayer videoPlayer;
+    private ExoPlayer videoPlayer;
 
     private ImageView imagePlayPause;
 
@@ -175,13 +174,13 @@ public class ActVideoTrimmer extends AppCompatActivity {
      **/
     private void initPlayer() {
         try {
-            videoPlayer = new SimpleExoPlayer.Builder(this).build();
+            videoPlayer = new ExoPlayer.Builder(this).build();
             playerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIT);
             playerView.setPlayer(videoPlayer);
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                 AudioAttributes audioAttributes = new AudioAttributes.Builder()
                         .setUsage(C.USAGE_MEDIA)
-                        .setContentType(C.CONTENT_TYPE_MOVIE)
+                        .setContentType(C.AUDIO_CONTENT_TYPE_MOVIE)
                         .build();
                 videoPlayer.setAudioAttributes(audioAttributes, true);
             }
@@ -261,7 +260,7 @@ public class ActVideoTrimmer extends AppCompatActivity {
             videoPlayer.addMediaSource(mediaSource);
             videoPlayer.prepare();
             videoPlayer.setPlayWhenReady(true);
-            videoPlayer.addListener(new Player.EventListener() {
+            videoPlayer.addListener(new Player.Listener() {
                 @Override
                 public void onPlayWhenReadyChanged(boolean playWhenReady, int reason) {
                     imagePlayPause.setVisibility(playWhenReady ? View.GONE :

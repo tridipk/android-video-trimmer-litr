@@ -102,26 +102,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void openTrimActivity(String data) {
         if (trimType == 0) {
             LogMessage.v("Valasdd "+data);
-            TrimVideo.activity(data)
+            Intent intent = TrimVideo.activity(data)
                     .setHideSeekBar(true)
                     .setCompressOption(new CompressOption(3)) //pass empty constructor for default compress option
                     .setDestination("/storage/emulated/0/DCIM/TESTFOLDER")
-                    .start(this);
+                    .build(this);
+            startActivityForResult(intent, TrimVideo.VIDEO_TRIMMER_REQ_CODE);
         } else if (trimType == 1) {
-            TrimVideo.activity(data)
+            Intent intent = TrimVideo.activity(data)
                     .setTrimType(TrimType.FIXED_DURATION)
                     .setFixedDuration(getEdtValueLong(edtFixedGap))
-                    .start(this);
+                    .build(this);
+            startActivityForResult(intent, TrimVideo.VIDEO_TRIMMER_REQ_CODE);
         } else if (trimType == 2) {
-            TrimVideo.activity(data)
+            Intent intent = TrimVideo.activity(data)
                     .setTrimType(TrimType.MIN_DURATION)
                     .setMinDuration(getEdtValueLong(edtMinGap))
-                    .start(this);
+                    .build(this);
+            startActivityForResult(intent, TrimVideo.VIDEO_TRIMMER_REQ_CODE);
         } else {
-            TrimVideo.activity(data)
+            Intent intent = TrimVideo.activity(data)
                     .setTrimType(TrimType.MIN_MAX_DURATION)
                     .setMinToMax(getEdtValueLong(edtMinFrom), getEdtValueLong(edtMAxTo))
-                    .start(this);
+                    .build(this);
+            startActivityForResult(intent, TrimVideo.VIDEO_TRIMMER_REQ_CODE);
         }
     }
 
