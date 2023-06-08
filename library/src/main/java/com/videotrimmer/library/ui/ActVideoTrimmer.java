@@ -155,8 +155,8 @@ public class ActVideoTrimmer extends AppCompatActivity {
         seekHandler = new Handler(getMainLooper());
         mediaTransformer = new MediaTransformer(this);
         initPlayer();
-        if (checkStoragePermission())
-            setDataInView();
+        //if (checkStoragePermission())
+        setDataInView();
     }
 
     private void setUpToolBar(ActionBar actionBar, String title) {
